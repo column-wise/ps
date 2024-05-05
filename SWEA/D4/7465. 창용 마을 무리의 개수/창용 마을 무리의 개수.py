@@ -47,7 +47,6 @@ for test_case in range(1, T + 1):
 # DFS
 
     def DFS(net, visited, n, group, group_count):
-        global answer
         if visited[n]:
             return
         else:
