@@ -1,29 +1,35 @@
+# https://www.acmicpc.net/problem/9663
+# back tracking
 import sys
 
 count = 0
 
-def is_promising(board, row, col):
-    for i in range(row):
-        if board[i] == col or board[i] - i == col - row or board[i] + i == col + row:
-            return False
-    return True
-
-def BT(board, N, row):
-    global count
-    if row == N:
+def BT(board, N, start):
+    if len(board) == 0:
+        board.append(start)
+        
+    if len(board) == N:
+        global count
         count += 1
         return
-    
-    for col in range(N):
-        if is_promising(board, row, col):
-            board[row] = col
-            BT(board, N, row+1)
-            board[row] = -1
-
+    else:
+        for i in range(N):
+            if i in board:
+                continue
+            for j in range(len(board)):
+                if len(board)-j == abs(board[j]-i):
+                    break
+            else:
+                board.append(i)
+                BT(board, N, start)
+                board.pop()
+            
+            continue   
 
 N = int(sys.stdin.readline().rstrip())
 board = [-1 for _ in range(N)]
 
+for i in range(N):
+    BT([], N, i)
 
-BT(board, N, 0)
 print(count)
