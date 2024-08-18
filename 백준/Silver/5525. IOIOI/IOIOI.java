@@ -6,30 +6,22 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
         int m = Integer.parseInt(br.readLine());
-        String[] s = br.readLine().split("");
-        boolean[] valid = new boolean[m];
-        boolean isIOI;
+        char[] s = br.readLine().toCharArray();
+        boolean isPossible;
         int answer = 0;
-        for(int i = 0; i < s.length; i++){
-            try{
-                if(s[i].equals("I")) {
-                    valid[i] = true;
-                    valid[i - 1] = false;
-                    isIOI = true;
-                    for (int j = 1; j <= n; j++) {
-                        if(!valid[i-(2*j)]){
-                            isIOI = false;
-                            break;
-                        }
-                    }
-                    if(isIOI){
-                        answer++;
-                    }
-                }else{
-                    valid[i] = false;
+        int count = 0;
+
+        for(int i = 0; i < m-2; i++){
+            if (s[i] == 'I' && s[i+1] == 'O' && s[i+2] == 'I') {
+                count ++;
+
+                if(count == n){
+                    answer++;
+                    count--;
                 }
-            }catch (Exception e){
-                continue;
+                i++;
+            }else{
+                count = 0;
             }
         }
         System.out.println(answer);
