@@ -55,11 +55,9 @@ public class Solution {
 					int idx = 0;
 					
 					// 수정할 필름 복사
-					for(int a = 0; a < d; a++) {
-						for(int b = 0; b < w; b++) {
-							modifiedFilm[a][b] = film[a][b];
-						}
-					}
+	                for (int a = 0; a < d; a++) {
+	                    System.arraycopy(film[a], 0, modifiedFilm[a], 0, w);
+	                }
 					
 					for(int k = 0; k < injectionCnt; k++) {
 						if((j&(1<<k)) != 0) {
