@@ -45,8 +45,8 @@ public class Solution {
 					}
 				}
 				
-				// 약품 주입하도록 선택 된 행의 개수가 최소값보다 작으면 
-				if(injectionCnt > min) {
+				// 약품 주입하도록 선택 된 행의 개수가 최소값보다 크면
+				if(injectionCnt >= min) {
 					continue;
 				}
 				
