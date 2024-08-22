@@ -31,13 +31,6 @@ public class Main {
 			setPipe(i, 0);
 		}
 		
-//		for(int i = 0; i < R; i++) {
-//			for(int j = 0; j < C; j++) {
-//				System.out.print(map[i][j]+" ");
-//			}
-//			System.out.println();
-//		}
-		
 		System.out.println(count);
 		
 	}
@@ -55,17 +48,7 @@ public class Main {
 			return flag;
 		}
 		
-
-		
 		map[curX][curY] = '-';
-//		
-//		for(int i = 0; i < R; i++) {
-//			for(int j = 0; j < C; j++) {
-//				System.out.print(map[i][j]+" ");
-//			}
-//			System.out.println();
-//		}
-//		Thread.sleep(400);
 		
 		for(int i = -1; i < 2; i++) {
 			if(setPipe(curX+i, curY+1)) {
@@ -75,7 +58,6 @@ public class Main {
 		return flag;
 		
 	}
-	
 	
 	public static List<Point> checkNextColumn(int x, int y) {
 		
@@ -100,22 +82,3 @@ public class Main {
 	}
 	
 }
-
-//15 15
-//.xxxxxxxxxx....
-//...x.......xxx.
-//...x.......x...
-//..xx.......xx..
-//...x........xx.
-//.x.x......x.x..
-//...x......xx...
-//.x.x....xxx....
-//.x....x.x......
-//.x.....xx.x....
-//.x..x.xx.......
-//.....xx........
-//....x..........
-//......x........
-//...............
-//    
-//답:4
