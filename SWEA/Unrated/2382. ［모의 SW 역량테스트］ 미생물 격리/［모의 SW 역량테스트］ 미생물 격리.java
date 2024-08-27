@@ -39,13 +39,12 @@ public class Solution {
 			}
 			
 			for(int i = 0; i < m; i++) {
-				
 				for(int j = 1; j < list.size(); j++) {
 					Microbiome microbiome = list.get(j);
 					if(microbiome.microorganism == 0) {
 						continue;
 					}
-					microbiome.checkCollision();
+					microbiome.move();
 				}
 				
 				for(int j = 1; j < list.size(); j++) {
@@ -53,7 +52,7 @@ public class Solution {
 					if(microbiome.microorganism == 0) {
 						continue;
 					}
-					microbiome.move();
+					microbiome.checkCollision();
 				}
 			}
 			int sum = 0;
