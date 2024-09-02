@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class Solution {
+	static List<Integer> selectedHoney1;
+	static List<Integer> selectedHoney2;
 	public static void main(String[] args) throws Exception{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
@@ -54,7 +56,7 @@ public class Solution {
 					
 					for(int a = 0; a < (1<<M); a++) {
 						int total1 = 0;
-						List<Integer> selectedHoney1 = new ArrayList<>();
+						selectedHoney1 = new ArrayList<>();
 						for(int b = 0; b < M; b++) {
 							if((a&(1<<b)) != 0) {
 								
@@ -68,7 +70,7 @@ public class Solution {
 						for(int c = 0; c < (1<<M); c++) {
 							int sum = 0;
 							int total2 = 0;
-							List<Integer> selectedHoney2 = new ArrayList<>();
+							selectedHoney2 = new ArrayList<>();
 							for(int d = 0; d < (1<<M); d++) {
 								if((c&(1<<d)) != 0) {
 									if(total2 + reducedDimension[start2+d] <= C) {
