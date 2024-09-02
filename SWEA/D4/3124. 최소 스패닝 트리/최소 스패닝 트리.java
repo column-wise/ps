@@ -1,90 +1,81 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Solution {
-	static List<Edge> edges;
-	static int[] parents;
+	static List<Edge>[] edgeList;
 	static int V;
 	static int E;
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws Exception{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
-		int T = Integer.parseInt(br.readLine());
-		for(int test_case = 1; test_case <= T; test_case++) {
+		int t = Integer.parseInt(br.readLine());
+		for(int test_case = 1; test_case <= t; test_case++) {
 			st = new StringTokenizer(br.readLine());
 			V = Integer.parseInt(st.nextToken());
 			E = Integer.parseInt(st.nextToken());
 			
-			makeSet();
+			edgeList = new ArrayList[V];
+			for(int i = 0; i < V; i++) {
+				edgeList[i] = new ArrayList<>();
+			}
 			
 			for(int i = 0; i < E; i++) {
 				st = new StringTokenizer(br.readLine());
-				int a = Integer.parseInt(st.nextToken())-1;
-				int b = Integer.parseInt(st.nextToken())-1;
-				int c = Integer.parseInt(st.nextToken());
-				edges.add(new Edge(a,b,c));
+				int a = Integer.parseInt(st.nextToken()) - 1;
+				int b = Integer.parseInt(st.nextToken()) - 1;
+				int cost = Integer.parseInt(st.nextToken());
+				
+				edgeList[a].add(new Edge(b, cost));
+				edgeList[b].add(new Edge(a, cost));
 			}
 			
-			Collections.sort(edges);
-			int count = 0;
-			long cost = 0;
-			
-			for(Edge e : edges) {
-				if(union(e.from, e.to)) {
-					cost += e.weight;
-					if(++count == V-1) {
-						break;
-					}
-				}
-			}
-			
-			System.out.println("#"+test_case+" "+cost);
-			
+			System.out.println("#"+test_case+" "+Prim(0));
 		}
 	}
 	
-	static class Edge implements Comparable<Edge>{
-		int from;
-		int to;
-		int weight;
+	public static long Prim(int startVertex) {
+		PriorityQueue<Edge> pq = new PriorityQueue<>();
+		pq.add(new Edge(startVertex, 0));
+		boolean visited[] = new boolean[V];
 		
-		public Edge(int from, int to, int weight) {
-			this.from = from;
+		Edge e;
+		long totalCost = 0;
+		while(!pq.isEmpty()) {
+			e = pq.poll();
+			if(!visited[e.to]) {
+				visited[e.to] = true; 
+				totalCost += e.cost;
+				
+				for(Edge next : edgeList[e.to]) {
+					if(!visited[next.to]) {
+						pq.add(next);
+					}
+				}
+			}
+		}
+		
+		return totalCost;
+	}
+	
+	public static class Edge implements Comparable<Edge>{
+		int to;
+		int cost;
+		
+		public Edge(int to, int cost) {
 			this.to = to;
-			this.weight = weight;
+			this.cost = cost;
 		}
 
 		@Override
 		public int compareTo(Edge o) {
 			// TODO Auto-generated method stub
-			return weight - o.weight;
+			return cost - o.cost;
 		}
+		
 	}
 	
-	public static void makeSet() {
-		parents = new int[V];
-		edges = new ArrayList<>();
-		for(int i = 0; i < V; i++) {
-			parents[i] = -1;
-		}
-	}
-	
-	public static int find(int a) {
-		if(parents[a] < 0) return a;
-		return parents[a] = find(parents[a]);
-	}
-	
-	public static boolean union(int a, int b) {
-		int aRoot = find(a);
-		int bRoot = find(b);
-		if(aRoot == bRoot) return false;
-		parents[aRoot] += parents[bRoot];
-		parents[bRoot] = aRoot;
-		return true;
-	}
 }
