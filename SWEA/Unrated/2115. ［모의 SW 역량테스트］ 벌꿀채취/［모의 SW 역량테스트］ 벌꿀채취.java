@@ -18,21 +18,14 @@ public class Solution {
 			int M = Integer.parseInt(st.nextToken());
 			int C = Integer.parseInt(st.nextToken());
 			
-			int[][] map = new int[N][N];
+			int[] map = new int[N*N];
 			
 			int max = 0;
 			
 			for(int i = 0; i < N; i++) {
 				st = new StringTokenizer(br.readLine());
 				for(int j = 0; j < N; j++) {
-					map[i][j] = Integer.parseInt(st.nextToken());
-				}
-			}
-			
-			int[] reducedDimension = new int[N*N];
-			for(int i = 0; i < N; i++) {
-				for(int j = 0; j < N; j++) {
-					reducedDimension[i*N+j] = map[i][j];
+					map[i*N + j] = Integer.parseInt(st.nextToken());
 				}
 			}
 			
@@ -60,9 +53,9 @@ public class Solution {
 						for(int b = 0; b < M; b++) {
 							if((a&(1<<b)) != 0) {
 								
-								if(total1+reducedDimension[start1+b] <= C) {
-									total1 += reducedDimension[start1+b];
-									selectedHoney1.add(reducedDimension[start1+b]);
+								if(total1+map[start1+b] <= C) {
+									total1 += map[start1+b];
+									selectedHoney1.add(map[start1+b]);
 								}
 							}
 						}
@@ -73,9 +66,9 @@ public class Solution {
 							selectedHoney2 = new ArrayList<>();
 							for(int d = 0; d < (1<<M); d++) {
 								if((c&(1<<d)) != 0) {
-									if(total2 + reducedDimension[start2+d] <= C) {
-										total2 += reducedDimension[start2+d];
-										selectedHoney2.add(reducedDimension[start2+d]);
+									if(total2 + map[start2+d] <= C) {
+										total2 += map[start2+d];
+										selectedHoney2.add(map[start2+d]);
 									}
 								}
 							}
