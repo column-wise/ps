@@ -5,36 +5,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Solution {
 	static int N;
 	static int[] parents;
 	static Island[] islands;
-	static List<Edge> edges;
+	static List<Edge>[] edges;
+	static double E;
 	
 	static void makeSet() {
-		parents = new int[N];
 		islands = new Island[N];
-		edges = new ArrayList<>();
+		edges = new ArrayList[N];
 		for(int i = 0; i < N; i++) {
-			parents[i] = -1;
+			edges[i] = new ArrayList<>();
 		}
 	}
 	
-	static int find(int a) {
-		if(parents[a] < 0) return a;
-		return parents[a] = find(parents[a]);
-	}
-	
-	static boolean union(int a, int b) {
-		int aRoot = find(a);
-		int bRoot = find(b);
-		if(aRoot == bRoot) return false;
-		parents[aRoot] += parents[bRoot];
-		parents[bRoot] = aRoot;
-		return true;
-	}
 	
 	public static void main(String[] args) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -55,41 +43,49 @@ public class Solution {
 				islands[i].y = Integer.parseInt(st.nextToken());
 			}
 			
-			double E = Double.parseDouble((br.readLine()));
+			E = Double.parseDouble((br.readLine()));
 			
 			for(int i = 0; i < N; i++) {
 				for(int j = i+1; j < N; j++) {
 //					System.out.println(i+" "+j);
 //					System.out.println(islands[i].toString());
 //					System.out.println(islands[j].toString());
-					edges.add(new Edge(i, j, islands[i].getDistance(islands[j])));
+					edges[i].add(new Edge(j, islands[i].getDistance(islands[j])));
+					edges[j].add(new Edge(i, islands[j].getDistance(islands[i])));
 				}
 			}
+			
+
+//			for(Edge e : edges[0]) {
+//				System.out.print(e.toString()+" ");
+//			}
+
 
 			
-			Collections.sort(edges);
-			
-			
-//			for(int i = 0; i < edges.size(); i++) {
-//				System.out.println(edges.get(i).toString());
-//			}
-			
-			double cost = 0;
-			int count = 0;
-			for(Edge e : edges) {
-				if(union(e.from, e.to)) {
-//					System.out.println(e.toString());
-					cost += e.dist*e.dist*E;
-					if(++count == N-1) {
-						break;
+			System.out.println("#"+test_case+" "+Math.round(Prim(0)));
+		}
+	}
+	
+	static double Prim(int startVertex) {
+		PriorityQueue<Edge> pq = new PriorityQueue<>();
+		pq.add(new Edge(startVertex, 0));
+		boolean[] visited = new boolean[N];
+		double totalCost = 0;
+		
+		while(!pq.isEmpty()) {
+			Edge e = pq.poll();
+			if(!visited[e.to]) {
+				visited[e.to] = true;
+				totalCost += e.dist*e.dist*E;
+				for(Edge next : edges[e.to]) {
+					if(!visited[next.to]) {
+						pq.add(next);
 					}
 				}
 			}
-			
-			cost = Math.round(cost);
-			
-			System.out.println("#"+test_case+" "+(long)cost);
 		}
+		return totalCost;
+		
 	}
 	
 	static class Island{
@@ -116,31 +112,22 @@ public class Solution {
 	}
 	
 	static class Edge implements Comparable<Edge>{
-		int from;
 		int to;
 		double dist;
 		
-		public Edge(int from, int to, double dist) {
-			this.from = from;
+		public Edge(int to, double dist) {
 			this.to = to;
 			this.dist = dist;
 		}
 
 		@Override
 		public String toString() {
-			return "Edge [from=" + from + ", to=" + to + ", dist=" + dist + "]";
+			return "Edge [to=" + to + ", dist=" + dist + "]";
 		}
 
 		@Override
 		public int compareTo(Edge o) {
-			// TODO Auto-generated method stub
-			int result = 0;
-			if(dist-o.dist>0) {
-				result = 1;
-			}else if(dist-o.dist<0) {
-				result = -1;
-			}
-			return result;
+			return Double.compare(dist, o.dist);
 		}
 	}
 }
