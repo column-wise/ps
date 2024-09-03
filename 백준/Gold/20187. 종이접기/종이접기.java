@@ -27,7 +27,7 @@ public class Main {
 			String command = st.nextToken();
 			switch(command) {
 			case "U":
-				xEnd = xEnd/2;
+				xEnd = xEnd - ((xEnd - xStart)/2);
 				break;
 			case "D":
 				xStart = (xStart+xEnd) / 2;
@@ -36,7 +36,7 @@ public class Main {
 				yStart = (yStart+yEnd) / 2;
 				break;
 			case "L":
-				yEnd = yEnd/2;
+				yEnd = yEnd - ((yEnd - yStart)/2);
 				break;
 			}
 		}
