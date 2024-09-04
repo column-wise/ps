@@ -1,49 +1,38 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Solution {
-    static int[] prices;
-    static int[] plans;
-    static int min;
-
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-        int T = Integer.parseInt(br.readLine());
-        for(int test_case = 1; test_case <= T; test_case++){
-            st = new StringTokenizer(br.readLine());
-            prices = new int[4];
-            for(int i = 0; i < 4; i++){
-                prices[i] = Integer.parseInt(st.nextToken());
-            }
-
-            st = new StringTokenizer(br.readLine());
-            plans = new int[12];
-            for(int i = 0; i < 12; i++){
-                plans[i] = Integer.parseInt(st.nextToken());
-            }
-
-            min = prices[3];
-            optimize(0, 0);
-
-            System.out.println("#"+test_case+" "+min);
-        }
-    }
-
-    private static void optimize(int priceSum, int month){
-        if(month >= 12){
-            min = Math.min(min, priceSum);
-        } else{
-            if(priceSum > min){
-                return;
-            }
-            optimize(priceSum + prices[0] * plans[month], month + 1);
-            optimize(priceSum + prices[1] * (plans[month]!=0?1:0), month + 1);
-            optimize(priceSum + prices[2], month + 3);
-            
-        }
-    }
-
+	public static void main(String[] args) throws Exception{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+		int T = Integer.parseInt(br.readLine());
+		for(int test_case = 1; test_case <= T; test_case++) {
+			st = new StringTokenizer(br.readLine());
+			int[] prices = new int[4];
+			
+			for(int i = 0; i < 4; i++) {
+				prices[i] = Integer.parseInt(st.nextToken());
+			}
+			
+			int min = prices[3];
+			
+			st = new StringTokenizer(br.readLine());
+			int[] plan = new int[12];
+			for(int i = 0; i < 12; i++) {
+				plan[i] = Integer.parseInt(st.nextToken());
+			}
+			
+			int[] dpTable = new int[15];
+			for(int i = 0; i < 12; i++) {
+				dpTable[i+3] = dpTable[i+2] + plan[i]*prices[0];
+				dpTable[i+3] = Math.min(dpTable[i+3], dpTable[i+2]+prices[1]);
+				dpTable[i+3] = Math.min(dpTable[i+3], dpTable[i]+prices[2]);
+			}
+			
+			min = Math.min(min, dpTable[14]);
+			System.out.println("#"+test_case + " "+min);
+		}
+	}
 }
