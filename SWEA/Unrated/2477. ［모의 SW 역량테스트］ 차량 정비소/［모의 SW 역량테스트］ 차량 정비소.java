@@ -76,7 +76,7 @@ public class Solution {
 
                 // 정비소에 도착하여 대기하는 고객이 있음
                 while(!receptionWaiting.isEmpty() && receptionWaiting.peekFirst().arrivalTime <= time){
-                    boolean canAccept = true;
+                    boolean canAccept = false;
 
                     // 접수 창구에서 빈 곳이 있는지 탐색
                     for(int i = 0; i < N; i++){
@@ -85,11 +85,8 @@ public class Solution {
                             s.respondingCustomer = receptionWaiting.pollFirst();
                             s.respondingCustomer.UsedReceptionDesk = i + 1;
                             s.respondingCustomer.completeReceptionTime = time + s.processingTime;
+                            canAccept = true;
                             break;
-                        }
-
-                        if(i == N-1){
-                            canAccept = false;
                         }
                     }
 
