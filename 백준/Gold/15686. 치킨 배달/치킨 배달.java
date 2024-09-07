@@ -5,64 +5,96 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
+    static int chickenCount;
+    static List<List<Integer>> comb;
     public static void main(String[] args) throws Exception{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
-        List<Point> homes = new ArrayList<>();
-        List<Point> chickenShops = new ArrayList<>();
-        int min = Integer.MAX_VALUE;
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
 
-        int [][] map = new int[n][n];
-        for(int i = 0; i < n; i++){
+        int [][] map = new int[N][N];
+        int result = 2500 * 13;
+        List<Home> homes = new ArrayList<>();
+        List<Chicken> chickens = new ArrayList<>();
+        comb = new ArrayList<>();
+
+        for(int i = 0; i < N; i++){
             st = new StringTokenizer(br.readLine());
-            for(int j = 0; j < n; j++){
+            for(int j = 0 ; j < N; j++){
                 map[i][j] = Integer.parseInt(st.nextToken());
                 if(map[i][j] == 1){
-                    homes.add(new Point(i,j));
-                }else if(map[i][j] == 2){
-                    chickenShops.add(new Point(i,j));
+                    homes.add(new Home(i,j));
+                } else if (map[i][j] == 2) {
+                    chickens.add(new Chicken(i,j));
                 }
+
             }
         }
 
-        for(int i = 0; i < (1<< chickenShops.size()); i++){
-            int count = 0;
-            List<Integer> choosed = new ArrayList<>();
-            for(int j = 0; j < chickenShops.size(); j++){
-                if((i&(1<<j)) > 0){
-                    count ++;
-                    choosed.add(j);
-                }
-            }
+        chickenCount = chickens.size();
 
-            if(count == m){
-                int sum = 0;
-                for(Point home: homes){
-                    int dist = Integer.MAX_VALUE;
-                    for(int j = 0; j < m; j++){
-                        dist = Math.min(dist, home.getDistance(chickenShops.get(choosed.get(j))));
-                    }
-                    sum += dist;
-                }
-                min = Math.min(min, sum);
+        for(int i = 0; i < homes.size(); i++){
+            Home h = homes.get(i);
+            for(int j = 0; j < chickens.size(); j++){
+                Chicken c = chickens.get(j);
+                h.chickenDist.add(h.getDistance(c.x, c.y));
             }
         }
-        System.out.println(min);
+
+        combination(0, 0, M, new ArrayList<>());
+
+        for(List<Integer> l : comb){
+            int sum = 0;
+            for(Home h : homes){
+                int min = 2500;
+                for(int chickenIdx : l){
+                    min = Math.min(min, h.chickenDist.get(chickenIdx));
+                }
+                sum += min;
+            }
+            result = Math.min(result, sum);
+        }
+
+        System.out.println(result);
+
     }
 
-    private static class Point{
+    static class Home {
+        int x;
+        int y;
+        List<Integer> chickenDist;
+
+        public Home(int x, int y) {
+            this.x = x;
+            this.y = y;
+            chickenDist = new ArrayList<>();
+        }
+        int getDistance(int x, int y){
+            return Math.abs(this.x-x) + Math.abs(this.y-y);
+        }
+    }
+
+    static class Chicken {
         int x;
         int y;
 
-        private Point(int x, int y){
+        public Chicken(int x, int y) {
             this.x = x;
             this.y = y;
         }
+    }
 
-        private int getDistance(Point p){
-            return Math.abs(x-p.x) + Math.abs(y-p.y);
+    static void combination(int start, int depth, int target, List<Integer> list){
+        if(depth == target){
+            comb.add(new ArrayList<>(list));
+            return;
+        }
+
+        for(int i = start; i < chickenCount; i++){
+            list.add(i);
+            combination(i+1, depth+1, target, list);
+            list.remove(list.size()-1);
         }
     }
 }
