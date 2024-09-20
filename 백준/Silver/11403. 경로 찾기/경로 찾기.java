@@ -8,6 +8,7 @@ public class Main {
     static int[][] res;
     public static void main(String[] args) throws Exception{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
         StringTokenizer st;
         N = Integer.parseInt(br.readLine());
         adjMatrix = new int[N][N];
@@ -28,10 +29,12 @@ public class Main {
 
         for(int i = 0; i < N; i++){
             for(int j = 0; j < N; j++){
-                System.out.print(res[i][j] + " ");
+                sb.append(res[i][j]).append(" ");
             }
-            System.out.println();
+            sb.append("\n");
         }
+        
+        System.out.println(sb);
     }
     private static void dfs(int start, int cur, boolean[] visited){
         for(int i = 0; i < N; i++){
