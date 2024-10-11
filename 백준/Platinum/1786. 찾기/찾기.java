@@ -6,6 +6,7 @@ import java.util.List;
 public class Main {
 	public static void main(String[] args) throws Exception{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
 		char[] string = br.readLine().toCharArray();
 		char[] pattern = br.readLine().toCharArray();
 		
@@ -16,7 +17,6 @@ public class Main {
 		int i = 0;
 		int j = 0;
 		int count = 0;
-		List<Integer> idxes = new ArrayList<>();
 		
 		while(i < string.length) {
 			if(string[i] == pattern[j]) {
@@ -30,15 +30,13 @@ public class Main {
 			
 			if(j == pattern.length) {
 				count ++;
-				idxes.add(i-j+1);
+				sb.append(i-j+1).append("\n");
 				j = pi[j-1];
 			}
 		}
 		
 		System.out.println(count);
-		for(int idx : idxes) {
-			System.out.println(idx);
-		}
+		System.out.println(sb);
 	}
 	
 	private static void computePi(int[] pi, char[] pattern) {
