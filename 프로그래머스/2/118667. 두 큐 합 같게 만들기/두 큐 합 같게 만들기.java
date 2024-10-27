@@ -39,7 +39,7 @@ class Solution {
                 answer++;
             }
             
-            if(answer > queue1.length * 3){
+            if(answer > queue1.length * 2 + 2){
                 answer = -1;
                 break;
             }
