@@ -1,11 +1,8 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
-    static final long INF = 100001L *100001;
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -15,16 +12,11 @@ public class Main {
         int targetA = Integer.parseInt(st.nextToken());
         int targetB = Integer.parseInt(st.nextToken());
 
-        long[][] dp = new long[sizeA + 1][sizeB + 1];
-        for(int i = 0; i <= sizeA; i++) {
-            for(int j = 0; j <= sizeB; j++) {
-                dp[i][j] = INF;
-            }
-        }
+        Map<Point, Integer> visited = new HashMap<>();
 
         Deque<Status> queue = new ArrayDeque<>();
         queue.add(new Status(0,0,0));
-        dp[0][0] = 0;
+        visited.put(new Point(0, 0), 0);
 
         while(!queue.isEmpty()) {
             Status status = queue.poll();
@@ -33,29 +25,29 @@ public class Main {
 
             int nx = sizeA;
             int ny = y;
-            if(dp[nx][ny] > status.turn + 1) {
-                dp[nx][ny] = status.turn + 1;
+            if(!visited.containsKey(new Point(nx, ny))) {
+                visited.put(new Point(nx, ny), status.turn + 1);
                 queue.add(new Status(nx, ny, status.turn + 1));
             }
 
             nx = x;
             ny = sizeB;
-            if(dp[nx][ny] > status.turn + 1) {
-                dp[nx][ny] = status.turn + 1;
+            if(!visited.containsKey(new Point(nx, ny))) {
+                visited.put(new Point(nx, ny), status.turn + 1);
                 queue.add(new Status(nx, ny, status.turn + 1));
             }
 
             nx = x;
             ny = 0;
-            if(dp[nx][ny] > status.turn + 1) {
-                dp[nx][ny] = status.turn + 1;
+            if(!visited.containsKey(new Point(nx, ny))) {
+                visited.put(new Point(nx, ny), status.turn + 1);
                 queue.add(new Status(nx, ny, status.turn + 1));
             }
 
             nx = 0;
             ny = y;
-            if(dp[nx][ny] > status.turn + 1) {
-                dp[nx][ny] = status.turn + 1;
+            if(!visited.containsKey(new Point(nx, ny))) {
+                visited.put(new Point(nx, ny), status.turn + 1);
                 queue.add(new Status(nx, ny, status.turn + 1));
             }
 
@@ -63,15 +55,15 @@ public class Main {
             if(temp > sizeA) {
                 nx = sizeA;
                 ny = temp - sizeA;
-                if(dp[nx][ny] > status.turn + 1) {
-                    dp[nx][ny] = status.turn + 1;
+                if(!visited.containsKey(new Point(nx, ny))) {
+                    visited.put(new Point(nx, ny), status.turn + 1);
                     queue.add(new Status(nx, ny, status.turn + 1));
                 }
             } else {
                 nx = temp;
                 ny = 0;
-                if(dp[nx][ny] > status.turn + 1) {
-                    dp[nx][ny] = status.turn + 1;
+                if(!visited.containsKey(new Point(nx, ny))) {
+                    visited.put(new Point(nx, ny), status.turn + 1);
                     queue.add(new Status(nx, ny, status.turn + 1));
                 }
             }
@@ -79,21 +71,22 @@ public class Main {
             if(temp > sizeB) {
                 nx = temp - sizeB;
                 ny = sizeB;
-                if(dp[nx][ny] > status.turn + 1) {
-                    dp[nx][ny] = status.turn + 1;
+                if(!visited.containsKey(new Point(nx, ny))) {
+                    visited.put(new Point(nx, ny), status.turn + 1);
                     queue.add(new Status(nx, ny, status.turn + 1));
                 }
             } else {
                 nx = 0;
                 ny = temp;
-                if(dp[nx][ny] > status.turn + 1) {
-                    dp[nx][ny] = status.turn + 1;
+                if(!visited.containsKey(new Point(nx, ny))) {
+                    visited.put(new Point(nx, ny), status.turn + 1);
                     queue.add(new Status(nx, ny, status.turn + 1));
                 }
             }
         }
 
-        System.out.println(dp[targetA][targetB] != INF ? dp[targetA][targetB] : -1);
+        Point target = new Point(targetA, targetB);
+        System.out.println(visited.get(target) != null ? visited.get(target) : "-1");
     }
 
     static class Status {
@@ -105,6 +98,28 @@ public class Main {
             this.x = x;
             this.y = y;
             this.turn = turn;
+        }
+    }
+
+    static class Point {
+        int x;
+        int y;
+        Point(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Point point = (Point) o;
+            return x == point.x && y == point.y;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y);
         }
     }
 }
