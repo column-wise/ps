@@ -23,14 +23,14 @@ class Solution {
         }
 
         for(int i = 0; i < friends.length; i++) {
-            for(int j = 0; j < friends.length; j++) {
-                if(i == j) continue;
+            for(int j = i+1; j < friends.length; j++) {
 
                 if(giftsCount[i][j] > giftsCount[j][i]) {
                     giftsToReceive[i]++;
                 } else if(giftsCount[i][j] < giftsCount[j][i]) {
                     giftsToReceive[j]++;
                 } else {
+		                // i, j 가 서로 주고 받은 선물 개수가 같은 경우 선물 지수 확인
                     if(giftsFactor[i] > giftsFactor[j]) {
                         giftsToReceive[i]++;
                     } else if(giftsFactor[i] < giftsFactor[j]) {
@@ -41,7 +41,7 @@ class Solution {
         }
         
         Arrays.sort(giftsToReceive);
-        answer = giftsToReceive[friends.length - 1] / 2;
+        answer = giftsToReceive[friends.length - 1];
         
         return answer;
     }
