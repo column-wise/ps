@@ -3,9 +3,12 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
+    static StringBuilder sb;
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
+        sb = new StringBuilder();
+
         int N = Integer.parseInt(br.readLine());
 
         Node root = new Node(0, "root");
@@ -23,6 +26,7 @@ public class Main {
         }
 
         root.traverse();
+        System.out.println(sb);
     }
 
     private static class Node implements Comparable<Node> {
@@ -57,11 +61,11 @@ public class Main {
 
         private void traverse() {
             for(int i = 0; i < floor; i++) {
-                System.out.print("--");
+                sb.append("--");
             }
 
             if(!food.equals("root")) {
-                System.out.println(food);
+                sb.append(food).append("\n");
             }
 
             while(!pq.isEmpty()) {
