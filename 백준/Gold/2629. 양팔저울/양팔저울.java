@@ -3,51 +3,48 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
+    static boolean[][] dp;
+    static int[] chu;
     static int n;
-    static int[] w;
-    static boolean[][] result;
-
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+        StringBuilder sb = new StringBuilder();
 
         n = Integer.parseInt(br.readLine());
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        st = new StringTokenizer(br.readLine());
+        chu = new int[n];
 
-
-        w = new int[n];
-        result = new boolean[n+1][40001];
-        for(int i=0; i<n; i++) {
-            int src = Integer.parseInt(st.nextToken());
-            w[i] = src;
+        for(int i = 0; i < n; i++) {
+            chu[i] = Integer.parseInt(st.nextToken());
         }
 
-        dp(0,0);
+        dp = new boolean[n+1][40001];
+        setDp(0, 0);
 
-        int c = Integer.parseInt(br.readLine());
-        StringBuilder sb = new StringBuilder();
+        int m = Integer.parseInt(br.readLine());
         st = new StringTokenizer(br.readLine());
-        for(int i=0; i<c; i++) {
-            int t = Integer.parseInt(st.nextToken());
-
-            if(result[n][t]) {
-                sb.append("Y ");
-            }else {
-                sb.append("N ");
+        int gusle;
+        for(int i = 0; i < m; i++) {
+            gusle = Integer.parseInt(st.nextToken());
+            try {
+                sb.append(dp[n][gusle] ? "Y " : "N ");
+            } catch(Exception e) {
+                sb.append("N" );
             }
         }
 
         System.out.println(sb.toString());
     }
 
-    static void dp(int cnt, int num) {
-        if(result[cnt][num]) return;
-        result[cnt][num] = true;
+    private static void setDp (int i, int weight) {
+        if(dp[i][weight]) return;
+        dp[i][weight] = true;
 
-        if(cnt == n	) return;
+        if(i == n) return;
 
-        dp(cnt+1, num+ w[cnt]);
-        dp(cnt+1, num);
-        dp(cnt+1, Math.abs(num- w[cnt]));
-
+        setDp(i + 1, weight + chu[i]);
+        setDp(i + 1, weight);
+        setDp(i + 1, Math.abs(chu[i] - weight));
     }
 }
