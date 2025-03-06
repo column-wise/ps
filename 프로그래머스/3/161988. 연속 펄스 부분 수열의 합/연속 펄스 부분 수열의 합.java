@@ -1,5 +1,5 @@
 class Solution {
-    public static long solution (int[] sequence) {
+    public long solution (int[] sequence) {
         long answer = Long.MIN_VALUE;
         long[] prefixSum = new long[sequence.length+1];
         long[] prefixSum2 = new long[sequence.length+1];
