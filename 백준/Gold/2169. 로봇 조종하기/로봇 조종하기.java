@@ -11,6 +11,7 @@ public class Main {
 		int M = Integer.parseInt(st.nextToken());
 
 		int[][] map = new int[N][M];
+		int[][][] dp = new int[N][M][4];
 
 		for(int i = 0; i < N; i++) {
 			st = new StringTokenizer(br.readLine());
@@ -19,38 +20,31 @@ public class Main {
 			}
 		}
 
-		int[] prevRowMax = new int[M];
-		prevRowMax[0] = map[0][0];
+		dp[0][0][3] = map[0][0];
 		for(int j = 1; j < M; j++) {
-			prevRowMax[j] = prevRowMax[j - 1] + map[0][j];
+			dp[0][j][3] = dp[0][j - 1][3] + map[0][j];
 		}
 
 		for(int i = 1; i < N; i++) {
-			int down[] = new int[M];
 			for(int j = 0; j < M; j++) {
-				down[j] = prevRowMax[j] + map[i][j];
+				dp[i][j][0] = dp[i-1][j][3] + map[i][j];
 			}
 
-			int left[] = new int[M];
-			left[0] = down[0];
+			dp[i][0][1] = dp[i][0][0];
 			for(int j = 1; j < M; j++) {
-				left[j] = Math.max(left[j - 1] + map[i][j], down[j]);
+				dp[i][j][1] = Math.max(dp[i][j-1][1] + map[i][j], dp[i][j][0]);
 			}
 
-			int right[] = new int[M];
-			right[M - 1] = down[M - 1];
+			dp[i][M-1][2] = dp[i][M-1][0];
 			for(int j = M - 2; j >= 0; j--) {
-				right[j] = Math.max(right[j + 1] + map[i][j], down[j]);
+				dp[i][j][2] = Math.max(dp[i][j+1][2] + map[i][j], dp[i][j][0]);
 			}
 
-			int[] cur = new int[M];
 			for(int j = 0; j < M; j++) {
-				cur[j] = Math.max(left[j], right[j]);
+				dp[i][j][3] = Math.max(dp[i][j][1], dp[i][j][2]);
 			}
-
-			prevRowMax = cur;
 		}
 
-		System.out.println(prevRowMax[M-1]);
+		System.out.println(dp[N-1][M-1][3]);
 	}
 }
