@@ -22,7 +22,7 @@ public class Main {
 				mbtis.add(mbti);
 			}
 
-			if(mbtis.size() > 48) {
+			if(mbtis.size() >= 33) {
 				sb.append("0").append("\n");
 			} else {
 				for(int i = 0; i < mbtis.size(); i++) {
