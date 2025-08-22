@@ -1,34 +1,38 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class Main {
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int n = Integer.parseInt(br.readLine());
-		int m = Integer.parseInt(br.readLine());
-		String[] inputs = br.readLine().split(" ");
-		int[] id = new int[inputs.length];
-		for(int i = 0; i<inputs.length; i++) {
-			id[i] = Integer.parseInt(inputs[i]);
+		int N = Integer.parseInt(br.readLine());
+		int M = Integer.parseInt(br.readLine());
+
+		int[] ids = new int[N];
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		for(int i = 0; i < N; i++) {
+			ids[i] = Integer.parseInt(st.nextToken());
 		}
-		
-		Arrays.sort(id);
+
+		Arrays.sort(ids);
+		int left = 0;
+		int right = N-1;
 		int count = 0;
-		int startIdx = 0;
-		int endIdx = id.length - 1;
-		
-		while(startIdx < endIdx) {
-			if(id[startIdx]+id[endIdx] == m) {
+
+		while(left < right) {
+			int sum = ids[left] + ids[right];
+			if(sum == M) {
+				left++;
+				right--;
 				count++;
-				endIdx--;
-			}else if(id[startIdx]+id[endIdx] > m) {
-				endIdx --;
-			}else {
-				startIdx++;
+			} else if(sum > M) {
+				right--;
+			} else {
+				left++;
 			}
 		}
+
 		System.out.println(count);
 	}
 }
