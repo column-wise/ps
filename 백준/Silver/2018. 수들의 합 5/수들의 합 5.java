@@ -1,40 +1,29 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
-        int [] prefixSum = new int[n];
-        prefixSum[0] = 0;
-        int count = 1;
-        int left = 0;
-        int right = 1;
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
 
-        for(int i = 1; i < n; i++){
-            prefixSum[i] = prefixSum[i-1] + i;
-        }
-/*
-        for(int i = 0; i < n; i++){
-            System.out.println(prefixSum[i]);
-        }
-*/
-        while(right < n){
-            if(prefixSum[right] - prefixSum[left] < n){
-                right++;
-            }
-            else if(prefixSum[right] - prefixSum[left] > n){
-                left++;
-            }
-            else {
-                //System.out.printf("%d, %d\n",prefixSum[right],prefixSum[left]);
-                right++;
-                left++;
-                count++;;
-            }
-        }
+		int[] prefixSum = new int[N + 1];
+		int n = 0;
+		for(int i = 0; i < N; i++) {
+			prefixSum[i+1] = prefixSum[i] + ++n;
+		}
 
-        System.out.println(count);
-    }
+		int start = 0;
+		int count = 0;
+		for(int end = 0; end <= N; end++) {
+			while(prefixSum[end] - prefixSum[start] > N) {
+				start++;
+			}
+
+			if(prefixSum[end] - prefixSum[start] == N) {
+				count++;
+			}
+		}
+
+		System.out.println(count);
+	}
 }
