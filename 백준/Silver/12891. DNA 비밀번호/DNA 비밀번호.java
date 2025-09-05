@@ -1,83 +1,59 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.StringTokenizer;
 
 public class Main {
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-    public static void main(String[] args) throws IOException{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
+		int S = Integer.parseInt(st.nextToken());
+		int P = Integer.parseInt(st.nextToken());
 
-        String DNAstring = br.readLine();
-        int[] limit = new int[4];
-        st = new StringTokenizer(br.readLine());
-        for(int i = 0; i < 4; i++) {
-            limit[i] = Integer.parseInt(st.nextToken());
-        }
+		char[] seq = new char[S];
+		String str = br.readLine();
+		for(int i = 0; i < S; i++) {
+			seq[i] = str.charAt(i);
+		}
 
-        int start = 0;
-        int end = m-1;
+		// A C G T
+		int[] requires = new int[4];
+		int[] cur = new int[4];
+		int count = 0;
 
-        int[] window = new int[4];
-        for(int i = 0; i <= end; i++){
-            char c = DNAstring.charAt(i);
-            switch (c){
-                case 'A':window[0]++;
-                    break;
-                case 'C':window[1]++;
-                    break;
-                case 'G':window[2]++;
-                    break;
-                case 'T':window[3]++;
-                    break;
-            }
-        }
-        int ans = 0;
-        while(end < n){
-            int count = 0;
-            for(int j = 0; j < 4; j++){
-                if(limit[j] <= window[j]){
-                    count++;
-                }
-            }
-            if(count == 4){
-                ans ++;
-            }
+		st = new StringTokenizer(br.readLine());
+		for(int i = 0; i < 4; i++) {
+			requires[i] = Integer.parseInt(st.nextToken());
+		}
 
-            char c = DNAstring.charAt(start);
-            switch (c){
-                case 'A':window[0]--;
-                    break;
-                case 'C':window[1]--;
-                    break;
-                case 'G':window[2]--;
-                    break;
-                case 'T':window[3]--;
-                    break;
-            }
+		int start = 0;
+		for(int end = 0; end < S; end++) {
+			char e = seq[end];
+			if(e == 'A') cur[0]++;
+			else if(e == 'C') cur[1]++;
+			else if(e == 'G') cur[2]++;
+			else if(e == 'T') cur[3]++;
 
-            start ++;
-            end ++;
-            if(end == n) {
-                break;
-            }
+			if(end-start == P-1) {
+				boolean satisfied = true;
+				for(int j = 0; j < 4; j++) {
+					if(cur[j] < requires[j]) {
+						satisfied = false;
+						break;
+					}
+				}
 
-            c = DNAstring.charAt(end);
-            switch (c){
-                case 'A':window[0]++;
-                    break;
-                case 'C':window[1]++;
-                    break;
-                case 'G':window[2]++;
-                    break;
-                case 'T':window[3]++;
-                    break;
-            }
+				if(satisfied) count++;
 
-        }
-        System.out.println(ans);
-    }
+				char s = seq[start];
+				if(s == 'A') cur[0]--;
+				else if(s == 'C') cur[1]--;
+				else if(s == 'G') cur[2]--;
+				else if(s == 'T') cur[3]--;
+				start++;
+			}
+		}
+
+		System.out.println(count);
+	}
 }
