@@ -1,89 +1,80 @@
 import java.util.*;
 
 class Solution {
-    static final int INF = Integer.MAX_VALUE;
-    static int[] parents;
-    static int n;
+    private int[] parents;
+    private int size;
+    private int maxGap = 0;
+    private final int INF = Integer.MAX_VALUE;
     public int solution(int[] stones, int k) {
-        
-        n = stones.length;
-        int maxGap = 0;
-        int time = 1;
-        int passed = 0;
-        
-        PriorityQueue<Node> pq = new PriorityQueue<>();
-        
+        int passengers = 0;
+        size = stones.length;
         init();
         
-        for(int i = 0; i < n; i++) {
-            pq.add(new Node(i, stones[i]));
+        PriorityQueue<Stone> pq = new PriorityQueue<>();
+        for(int i = 0; i < size; i++) {
+            pq.add(new Stone(i, stones[i]));
         }
-        
-        while(maxGap < k) {
-            while(!pq.isEmpty() && pq.peek().durability - time <= 0) {
-                Node node = pq.poll();
-                int index = node.index;
                 
-                parents[index] = -1;
-
-                if(index > 0 && parents[index-1] != INF) {
-                    union(index-1, index);
+        while(!pq.isEmpty()) {
+            passengers = pq.peek().durability;
+            while(!pq.isEmpty() && pq.peek().durability - passengers <= 0) {
+                Stone s = pq.poll();
+                parents[s.num] = -1;
+                
+                int leftGap = 1;
+                int rightGap = 1;
+                if(s.num > 0) {
+                    leftGap = Math.max(maxGap, union(s.num-1, s.num));
                 }
-
-                if(index < n - 1 && parents[index+1] != INF) {
-                    union(index, index+1);
+                
+                if(s.num < size - 1) {
+                    rightGap = Math.max(maxGap, union(s.num, s.num+1));
                 }
-
-                if(maxGap < -parents[find(index)]) {
-                    maxGap = -parents[find(index)];
-                    if(node.durability == time) passed = node.durability;
-                }                
+                
+                maxGap = Math.max(maxGap, Math.max(leftGap, rightGap));
             }
             
             if(maxGap >= k) break;
-            
-            passed = time;
-            time = pq.peek().durability;
+            passengers++;
         }
         
-        return passed;
+        return passengers;
     }
     
-    private static class Node implements Comparable<Node> {
-        int index;
-        int durability;
-        
-        public Node (int index, int durability) {
-            this.index = index;
-            this.durability = durability;
-        }
-        
-        public int compareTo(Node o) {
-            return this.durability - o.durability;
-        }
-    }
-    
-    private static void init() {
-        parents = new int[n];
-        
-        for(int i = 0; i < n; i++) {
+    private void init() {
+        parents = new int[size];
+        for(int i = 0; i < size; i++) {
             parents[i] = INF;
         }
     }
     
-    private static int find (int a) {
+    private int find(int a) {
+        if(parents[a] == INF) return INF;
         if(parents[a] < 0) return a;
         return parents[a] = find(parents[a]);
     }
     
-    private static boolean union (int a, int b) {
+    private int union(int a, int b) {
         int aRoot = find(a);
         int bRoot = find(b);
         
-        if(aRoot == bRoot) return false;
-        
+        if(aRoot == INF || bRoot == INF || aRoot == bRoot) return 1;
         parents[aRoot] += parents[bRoot];
         parents[bRoot] = aRoot;
-        return true;
+        return -parents[aRoot];
+    }
+    
+    private class Stone implements Comparable<Stone>{
+        int num;
+        int durability;
+        
+        Stone(int num, int durability) {
+            this.num = num;
+            this.durability = durability;
+        }
+        
+        public int compareTo(Stone o) {
+            return Integer.compare(durability, o.durability);
+        }
     }
 }
