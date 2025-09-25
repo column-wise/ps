@@ -1,53 +1,46 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-        List<Long> pHValues = new ArrayList<>();
-        StringTokenizer st = new StringTokenizer(br.readLine());
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-        for(int i = 0; i < N; i++){
-            pHValues.add(Long.parseLong(st.nextToken()));
-        }
+		int[] liquids = new int[N];
+		for(int i = 0; i < N; i++) {
+			liquids[i] = Integer.parseInt(st.nextToken());
+		}
 
-        Collections.sort(pHValues);
+		Arrays.sort(liquids);
 
-        long liquid1 = 0;
-        long liquid2 = 0;
-        long min = Long.MAX_VALUE;
+		int left = 0;
+		int right = N-1;
+		int liquidA = 0;
+		int liquidB = 0;
+		int min = Integer.MAX_VALUE;
 
-        for(int i = 0; i < N; i++){
-            long ph1 = pHValues.get(i);
+		while(left < right) {
+			int a = liquids[left];
+			int b = liquids[right];
 
-            int left = 0;
-            int right = N-1;
+			if(Math.abs(a + b) < min) {
+				liquidA = a;
+				liquidB = b;
+				min = Math.abs(a + b);
+			}
 
-            while(left <= right){
-                int mid = (left + right)/2;
-                long ph2 = pHValues.get(mid);
+			if(a + b == 0) {
+				break;
+			} else if(a + b < 0) {
+				left++;
+			} else {
+				right--;
+			}
+		}
 
-                if(Math.abs(ph1 + ph2) < min && ph1 != ph2){
-                    min = Math.abs(ph1 + ph2);
-                    liquid1 = Math.min(ph1, ph2);
-                    liquid2 = Math.max(ph1, ph2);
-                }
-
-                if(ph1 + ph2 < 0){
-                    left = mid + 1;
-                } else if (ph1 + ph2 > 0){
-                    right = mid - 1;
-                } else{
-                    break;
-                }
-
-            }
-        }
-        System.out.println(liquid1 + " " + liquid2);
-    }
+		System.out.println(liquidA + " " + liquidB);
+	}
 }
