@@ -1,73 +1,72 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
-	static List<Integer>[] graph;
-	static int[] dpTable;
-	static boolean[] visited;
-	public static void main(String[] args) throws IOException{
+	static List<Integer>[] adjList;
+	static Node[] nodes;
+	static int N, R;
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(st.nextToken());
-		int R = Integer.parseInt(st.nextToken())-1;
+		StringBuilder sb = new StringBuilder();
+
+		N = Integer.parseInt(st.nextToken());
+		R = Integer.parseInt(st.nextToken());
 		int Q = Integer.parseInt(st.nextToken());
-		graph = new ArrayList[N];
-		dpTable = new int[N];
-		visited = new boolean[N];
-		
-		for(int i = 0; i < N; i++) {
-			graph[i] = new ArrayList<>();
+
+		nodes = new Node[N+1];
+		adjList = new List[N+1];
+		for(int i = 1; i <= N; i++) {
+			nodes[i] = new Node(i);
+			adjList[i] = new ArrayList<>();
 		}
-		
-		for(int i = 0; i < N-1; i++) {
+
+		for(int i = 1; i < N; i++) {
 			st = new StringTokenizer(br.readLine());
-			int a = Integer.parseInt(st.nextToken())-1;
-			int b = Integer.parseInt(st.nextToken())-1;
-			graph[a].add(b);
-			graph[b].add(a);
+			int u = Integer.parseInt(st.nextToken());
+			int v = Integer.parseInt(st.nextToken());
+
+			adjList[u].add(v);
+			adjList[v].add(u);
 		}
-		
-		Node root = new Node(R);
-		makeTree(root);
-		countSubTreeNode(root);
-	
+
+		nodes[R].init(-1);
+		nodes[R].traverse();
+
 		for(int i = 0; i < Q; i++) {
-			System.out.println(dpTable[Integer.parseInt(br.readLine())-1]);
+			int q = Integer.parseInt(br.readLine());
+			sb.append(nodes[q].subNodes).append("\n");
 		}
-		
+
+		System.out.println(sb);
 	}
-	
-	static class Node{
-		int id;
-		List<Node> childs;
-		
-		public Node(int id) {
-			this.id = id;
-			childs = new ArrayList<>();
+
+	private static class Node {
+		int n;
+		int subNodes = 1;
+		List<Node> children = new ArrayList<>();
+
+		private Node(int n) {
+			this.n = n;
 		}
-	}
-	
-	static void makeTree(Node curNode) {
-		visited[curNode.id] = true; 
-		for(int child : graph[curNode.id]) {
-			if(!visited[child]) {
-				Node childNode = new Node(child);
-				curNode.childs.add(childNode);
-				makeTree(childNode);				
+
+		public void init(int parent) {
+			for(int child : adjList[n]) {
+				if(child == parent) continue;
+				nodes[n].children.add(nodes[child]);
+				nodes[child].init(n);
 			}
 		}
-	}
-	
-	static void countSubTreeNode(Node root) {
-		dpTable[root.id] = 1;
-		for(Node childNode : root.childs) {
-			countSubTreeNode(childNode);
-			dpTable[root.id]+=dpTable[childNode.id]; 
+
+		public int traverse() {
+			for(Node child : children) {
+				subNodes += child.traverse();
+			}
+
+			return subNodes;
 		}
 	}
-	
 }
